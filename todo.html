@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List - My Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: rgba(10, 10, 25, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 40px 0 0 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .sidebar a.active {
+            border-left: 3px solid rgba(0, 245, 255, 0.7);
+        }
+
+        /* ── Main area ── */
+        .main {
+            flex: 1;
+            padding: 30px 40px;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .navbar {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            display: block;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+        }
+
+        /* ── Todo layout ── */
+        .todo-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Input card ── */
+        .todo-input-card {
+            width: 320px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .todo-input-card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
+        }
+
+        #todoInput {
+            width: 100%;
+            padding: 13px 18px;
+            font-size: 15px;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #todoInput::placeholder {
+            color: rgba(255, 255, 255, 0.28);
+        }
+
+        #todoInput:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 245, 255, 0.5);
+            box-shadow: 0 0 18px rgba(0, 245, 255, 0.15);
+        }
+
+        .add-btn {
+            width: 100%;
+            margin-top: 14px;
+            padding: 13px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 245, 255, 0.5);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .add-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ── Tasks list panel ── */
+        .tasks-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .tasks-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tasks-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tasks-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .tasks-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .empty-state {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 15px;
+            text-align: center;
+            padding: 60px 0;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* task items rendered by todo.js */
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 3px solid rgba(79, 172, 254, 0.5);
+            border-radius: 14px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .task:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+
+
+        /* custom checkbox */
+        .task input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+            background: transparent;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .task input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, #0099ff, #00f5ff);
+            border-color: transparent;
+        }
+
+        .task input[type="checkbox"]:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            color: #fff;
+            font-size: 11px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .task span {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.2s ease;
+        }
+
+        .delete-task-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 100, 112, 0.7);
+            font-size: 15px;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .delete-task-btn:hover {
+            color: rgba(255, 71, 87, 1);
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        /* scrollbar .main */
+        .main::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .main::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="vanta-bg"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="profile.html"><i class="fa-solid fa-user" style="width:25px;"></i> PROFILE</a></li>
+            <li><a href="todo.html" class="active"><i class="fa-solid fa-list-check" style="width:25px;"></i> TO-DO
+                    LIST</a></li>
+            <li><a href="notes.html"><i class="fa-solid fa-note-sticky" style="width:25px;"></i> NOTES</a></li>
+            <li><a href="calender1.html"><i class="fa-solid fa-calendar" style="width:25px;"></i> CALENDAR</a></li>
+            <li><a href="documents.html"><i class="fa-solid fa-folder-open" style="width:25px;"></i> DOCUMENTS
+                    <i class="fa-solid fa-lock" style="font-size:10px; opacity:0.5; margin-left:5px;"></i></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="navbar">
+            <a href="main.html">My Hub</a>
+        </div>
+
+        <div class="todo-wrapper">
+            <!-- Input card -->
+            <div class="todo-input-card">
+                <h2><i class="fa-solid fa-list-check" style="margin-right:8px;"></i>New Task</h2>
+                <input type="text" id="todoInput" placeholder="Add a new task...">
+                <button class="add-btn" onclick="addTask()">
+                    <i class="fa-solid fa-plus" style="margin-right:6px;"></i>Add Task
+                </button>
+            </div>
+
+            <!-- Tasks list -->
+            <div class="tasks-panel" id="todoList"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script>
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x00f5ff,
+            backgroundColor: 0x070014,
+            points: 15.00,
+            maxDistance: 25.00,
+            spacing: 20.00
+        });
+
+        // allow Enter key to add task
+        document.getElementById('todoInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') addTask();
+        });
+    </script>
+    <script src="todo.js"></script>
+
+</body>
+
+</html>

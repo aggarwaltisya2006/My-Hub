@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Interactive Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .hero-text {
+            flex: 1;
+            padding-left: 8vw;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 5rem;
+            line-height: 1.1;
+            margin: 0 0 20px 0;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(0, 245, 255, 0.4);
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 500px;
+            animation: fadeInLeft 1.5s ease-out;
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        #vanta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .intro-content {
+            z-index: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 60px 60px;
+            margin-right: 8vw;
+            width: 320px;
+            background: rgba(10, 10, 25, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .intro-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: skewX(-20deg);
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        .intro-content:hover::before {
+            left: 150%;
+        }
+
+        .intro-content:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 0 25px rgba(223, 0, 255, 0.8);
+            animation: fadeInDown 1s ease-out;
+            transform: translateZ(60px);
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin: 0;
+            letter-spacing: 1px;
+            animation: fadeIn 1.5s ease-out;
+            transform: translateZ(40px);
+        }
+
+        .enter-btn {
+            pointer-events: auto;
+            display: inline-block;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            text-decoration: none;
+            background: linear-gradient(270deg, #667eea, #df00ff, #00f5ff, #667eea);
+            background-size: 300% 300%;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.5s both, gradientPulse 5s ease infinite;
+            transform: translateZ(50px);
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-5px) scale(1.05) translateZ(50px);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 15px 40px 0 rgba(223, 0, 255, 0.6), 0 0 20px rgba(0, 245, 255, 0.4);
+            color: #fff;
+        }
+
+        @keyframes gradientPulse {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .enter-btn:active {
+            transform: translateY(0) scale(0.95) translateZ(50px);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+            align-items: center;
+            margin-top: 10px;
+            transform: translateZ(50px);
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-sizing: border-box;
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .login-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #00f5ff;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .logo {
+            font-size: 4rem;
+            color: #00f5ff;
+            text-shadow: 0 0 20px rgba(0, 245, 255, 0.8), 0 0 40px rgba(223, 0, 255, 0.6);
+            margin-bottom: -10px;
+            animation: float 3s ease-in-out infinite;
+            transform: translateZ(60px);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateZ(60px); }
+            50% { transform: translateY(-10px) translateZ(60px); }
+            100% { transform: translateY(0px) translateZ(60px); }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            transform: translateZ(50px);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .outline-btn {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(0, 245, 255, 0.5) !important;
+            color: #00f5ff !important;
+            animation: fadeInUp 1s ease-out 0.7s both !important;
+        }
+        
+        .outline-btn:hover {
+            background: rgba(0, 245, 255, 0.1) !important;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.4) !important;
+        }
+
+        .back-btn {
+            padding: 16px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.7);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .view h2 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 0 0 15px rgba(223, 0, 255, 0.6);
+            transform: translateZ(60px);
+        }
+        
+        .view .subtitle {
+            margin-top: -15px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        .active-view {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        #signupView, #signinView {
+            display: none; /* Initially hide non-active views */
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 320px;
+            align-items: center;
+            transform: translateZ(50px);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-sizing: border-box;
+        }
+
+        .auth-input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        .auth-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #00f5ff;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="vanta-bg"></div>
+    
+    <div class="hero-text">
+        <h1 class="hero-title">Connect.<br>Organize.<br>Succeed.</h1>
+        <p class="hero-subtitle">Your unified digital workspace, beautifully interactive and completely secure.</p>
+    </div>
+
+    <div class="intro-content" id="introContainer">
+        <!-- Main View -->
+        <div id="mainView" class="view active-view">
+            <div class="logo">
+                <i class="fa-solid fa-cubes"></i>
+            </div>
+            <h1>My Hub</h1>
+            <p>Your interactive utility center</p>
+            <div class="button-group" style="flex-direction: column; width: 100%; gap: 12px; margin-top: 15px;">
+                <button type="button" class="enter-btn" id="showSigninBtn" style="border: none; width: 100%; text-align: center; cursor: pointer; padding: 14px 0;">Sign In</button>
+                <button type="button" class="enter-btn outline-btn" id="showSignupBtn" style="width: 100%; text-align: center; cursor: pointer; padding: 14px 0; animation-delay: 0.2s;">Sign Up</button>
+            </div>
+        </div>
+
+        <!-- Signin View -->
+        <div id="signinView" class="view hidden">
+            <h2>Sign In</h2>
+            <p class="subtitle">Access your My Hub</p>
+            <form id="signinForm" class="auth-form">
+                <input type="email" id="signinEmail" placeholder="Email" required class="auth-input">
+                <input type="password" id="signinPasskey" placeholder="Passkey (4-digit PIN)" required maxlength="4" pattern="[0-9]{1,4}" inputmode="numeric" class="auth-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <div class="error-msg" id="signinError" style="color: #ff4d4d; font-size: 0.9rem; text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); margin-bottom: 5px; display: none; text-align: center;"></div>
+                <div class="button-group">
+                    <button type="submit" class="enter-btn" style="border: none; cursor: pointer; padding: 16px 20px;">Sign In</button>
+                    <button type="button" class="back-btn" onclick="showView('mainView')">Back</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Signup View -->
+        <div id="signupView" class="view hidden">
+            <h2>Sign Up</h2>
+            <p class="subtitle">Create your My Hub profile</p>
+            <form id="signupForm" class="auth-form">
+                <input type="text" id="signupName" placeholder="Full Name" required class="auth-input">
+                <input type="email" id="signupEmail" placeholder="Email" required class="auth-input">
+                <input type="password" id="signupPasskey" placeholder="Passkey (4-digit PIN)" required maxlength="4" pattern="[0-9]{1,4}" inputmode="numeric" class="auth-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <div class="error-msg" id="signupError" style="color: #ff4d4d; font-size: 0.9rem; text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); margin-bottom: 5px; display: none; text-align: center;"></div>
+                <div class="button-group">
+                    <button type="submit" class="enter-btn" style="border: none; cursor: pointer; padding: 16px 20px;">Sign Up</button>
+                    <button type="button" class="back-btn" onclick="showView('mainView')">Back</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        // View Management
+        function showView(viewId) {
+            // Clear all error messages
+            document.querySelectorAll('.error-msg').forEach(err => {
+                err.textContent = '';
+                err.style.display = 'none';
+            });
+
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active-view');
+                view.classList.add('hidden');
+                setTimeout(() => {
+                    if (view.id !== viewId) view.style.display = 'none';
+                }, 300); // Wait for transition
+            });
+            
+            const targetView = document.getElementById(viewId);
+            targetView.style.display = 'flex';
+            setTimeout(() => {
+                targetView.classList.remove('hidden');
+                targetView.classList.add('active-view');
+            }, 10);
+        }
+
+        document.getElementById('showSignupBtn').addEventListener('click', () => showView('signupView'));
+        document.getElementById('showSigninBtn').addEventListener('click', () => showView('signinView'));
+
+        // Handle Signup
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const signupError = document.getElementById('signupError');
+            signupError.style.display = 'none';
+            signupError.textContent = '';
+
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const passkey = document.getElementById('signupPasskey').value.trim();
+
+            if (passkey.length !== 4) {
+                signupError.textContent = 'Passkey must be exactly 4 digits.';
+                signupError.style.display = 'block';
+                return;
+            }
+
+            localStorage.setItem('profileName', name);
+            localStorage.setItem('profileEmail', email);
+            localStorage.setItem('profilePasskey', passkey);
+            
+            localStorage.setItem('userLoggedIn', 'true');
+            window.location.href = 'main.html';
+        });
+
+        // Handle Signin
+        document.getElementById('signinForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const signinError = document.getElementById('signinError');
+            signinError.style.display = 'none';
+            signinError.textContent = '';
+
+            const email = document.getElementById('signinEmail').value.trim();
+            const passkey = document.getElementById('signinPasskey').value.trim();
+
+            const registeredEmail = localStorage.getItem('profileEmail');
+            const registeredPasskey = localStorage.getItem('profilePasskey');
+
+            if (!registeredEmail) {
+                signinError.textContent = 'No profile found. Please Sign Up first!';
+                signinError.style.display = 'block';
+                setTimeout(() => {
+                    showView('signupView');
+                }, 1500);
+                return;
+            }
+
+            if (email === registeredEmail && passkey === registeredPasskey) {
+                localStorage.setItem('userLoggedIn', 'true');
+                window.location.href = 'main.html';
+            } else {
+                signinError.textContent = 'Invalid Email or Passkey!';
+                signinError.style.display = 'block';
+            }
+        });
+
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x00f5ff,
+            backgroundColor: 0x070014,
+            points: 15.00,
+            maxDistance: 25.00,
+            spacing: 20.00
+        });
+    </script>
+</body>
+
+</html>

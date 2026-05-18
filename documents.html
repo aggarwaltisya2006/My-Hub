@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Documents - Interactive Hub</title>
+    <script>
+        const password = prompt("Enter password to access Documents (Hint: admin1234):");
+        if (password !== "admin1234") {
+            alert("Incorrect password or access cancelled. Redirecting to Hub...");
+            window.location.href = "main.html";
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="main2.css">
+    <style>
+        .documents-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            width: 100%;
+            height: calc(100vh - 150px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .upload-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="file"] {
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .upload-btn {
+            padding: 10px 20px;
+            background: rgba(0, 245, 255, 0.2);
+            border: 1px solid rgba(0, 245, 255, 0.5);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: rgba(0, 245, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .doc-list {
+            flex: 1;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .doc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .doc-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .doc-item i {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-right: 15px;
+        }
+        
+        .doc-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .delete-btn {
+            color: #ff4757;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 18px;
+            transition: transform 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+
+    <div class="sidebar" data-tilt data-tilt-max="2" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
+        <ul>
+            <li><a href="profile.html"><i class="fa-solid fa-user" style="width: 25px;"></i> PROFILE</a></li>
+            <li><a href="todo.html"><i class="fa-solid fa-list-check" style="width: 25px;"></i> TO-DO LIST</a></li>
+            <li><a href="notes.html"><i class="fa-solid fa-note-sticky" style="width: 25px;"></i> NOTES</a></li>
+            <li><a href="calender1.html"><i class="fa-solid fa-calendar" style="width: 25px;"></i> CALENDAR</a></li>
+            <li><a href="documents.html" style="color: #fff; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-folder-open" style="width: 25px;"></i> DOCUMENTS <i class="fa-solid fa-lock" style="font-size: 10px; opacity: 0.5; margin-left: 5px;"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="navbar">
+            <a href="main.html" style="font-size: 24px;"><i class="fa-solid fa-arrow-left"></i> Back to Hub</a>
+        </div>
+
+        <div class="documents-container">
+            <h2>Secure Document Vault</h2>
+            
+            <div class="upload-section">
+                <input type="file" id="fileInput">
+                <button class="upload-btn" onclick="uploadFile()"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
+            </div>
+
+            <div class="doc-list" id="docList">
+                <div class="doc-item">
+                    <div class="doc-info">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Project.pdf</span>
+                    </div>
+                    <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x00f5ff,
+            backgroundColor: 0x070014,
+            points: 15.00,
+            maxDistance: 25.00,
+            spacing: 20.00
+        });
+        
+        VanillaTilt.init(document.querySelectorAll(".sidebar"), { max: 2, speed: 400 });
+
+        function uploadFile() {
+            const input = document.getElementById('fileInput');
+            if (input.files.length > 0) {
+                const fileName = input.files[0].name;
+                const docList = document.getElementById('docList');
+                
+                const newItem = document.createElement('div');
+                newItem.className = 'doc-item';
+                newItem.innerHTML = `
+                    <div class="doc-info">
+                        <i class="fa-solid fa-file"></i>
+                        <span>${fileName}</span>
+                    </div>
+                    <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>
+                `;
+                
+                docList.prepend(newItem);
+                input.value = ''; 
+            } else {
+                alert("Please select a file to upload.");
+            }
+        }
+    </script>
+</body>
+</html>
