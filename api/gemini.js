@@ -1,4 +1,4 @@
-export default async function handler(request, response) {
+module.exports = async function handler(request, response) {
   if (request.method !== 'POST') {
     response.setHeader('Allow', 'POST');
     return response.status(405).json({ error: 'Method not allowed' });
@@ -32,7 +32,7 @@ export default async function handler(request, response) {
 
   try {
     const apiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(apiKey),
       {
         method: 'POST',
         headers: {
@@ -57,4 +57,4 @@ export default async function handler(request, response) {
   } catch (error) {
     return response.status(500).json({ error: 'Failed to reach Gemini API.', details: error.message });
   }
-}
+};
