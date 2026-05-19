@@ -9,5 +9,14 @@ yarn.lock
 .DS_Store
 Thumbs.db
 *.env
+.env.local
+.env.*
+api.key
+apikey
+*.apikey
+*.secret
+.secret
 .vscode/
 *.log
+*.key
+*.pem
