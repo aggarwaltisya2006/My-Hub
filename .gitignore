@@ -1,22 +1,17 @@
-.vercel
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-yarn.lock
-.pnpm-debug.log*
+# OS metadata files
 .DS_Store
 Thumbs.db
-*.env
-.env.local
-.env.*
-api.key
-apikey
-*.apikey
-*.secret
-.secret
+
+# IDE settings
 .vscode/
-*.log
-*.key
-*.pem
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Local config files
+.env
+.env.local
+.env.*.local

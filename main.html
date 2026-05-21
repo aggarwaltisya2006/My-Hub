@@ -91,29 +91,6 @@
             </div>
     </div>
 
-    <div id="chatbot-container">
-        <div id="chat-window" class="chat-window hidden">
-            <div class="chat-header">
-                <div class="chat-title">
-                    <i class="fa-solid fa-sparkles"></i> Gemini AI
-                </div>
-                <button id="close-chat" class="close-btn"><i class="fa-solid fa-times"></i></button>
-            </div>
-            <div id="chat-messages" class="chat-messages">
-                <div class="message bot">
-                    Hi there! I'm Gemini. How can I help you today?
-                </div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
-                <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </div>
-
-        <button id="chatbot-trigger" class="chatbot-btn" data-tilt data-tilt-max="15">
-            <i class="fa-solid fa-message"></i>
-        </button>
-    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
@@ -135,78 +112,6 @@
             spacing: 20.00
         });
         VanillaTilt.init(document.querySelectorAll(".card"), { max: 10, speed: 400 });
-        VanillaTilt.init(document.querySelectorAll(".chatbot-btn"), { max: 15, speed: 400, glare: true, "max-glare": 0.5 });
-
-        const chatbotTrigger = document.getElementById('chatbot-trigger');
-        const chatWindow = document.getElementById('chat-window');
-        const closeChatBtn = document.getElementById('close-chat');
-        const sendBtn = document.getElementById('send-btn');
-        const chatInput = document.getElementById('chat-input');
-        const chatMessages = document.getElementById('chat-messages');
-
-        function toggleChat() {
-            chatWindow.classList.toggle('hidden');
-            if (!chatWindow.classList.contains('hidden')) {
-                chatInput.focus();
-            }
-        }
-
-        chatbotTrigger.addEventListener('click', toggleChat);
-        closeChatBtn.addEventListener('click', toggleChat);
-
-        function addMessage(text, sender) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', sender);
-            msgDiv.innerText = text;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function handleSend() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-
-            addMessage(text, 'user');
-            chatInput.value = '';
-           
-            const loadingId = "loader-" + Date.now();
-            const loadingDiv = document.createElement('div');
-            loadingDiv.classList.add('message', 'bot', 'loading');
-            loadingDiv.id = loadingId;
-            loadingDiv.innerText = "...";
-            chatMessages.appendChild(loadingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            try {
-                const response = await fetch('/api/gemini', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ text })
-                });
-
-                const data = await response.json();
-
-                const loaderNode = document.getElementById(loadingId);
-                if (loaderNode) loaderNode.remove();
-
-                if (response.ok && data.candidates && data.candidates.length > 0) {
-                    addMessage(data.candidates[0].content.parts[0].text, 'bot');
-                } else {
-                    addMessage("Error: " + (data.error?.message || "Failed to fetch response"), 'bot');
-                }
-            } catch (error) {
-                const loaderNode = document.getElementById(loadingId);
-                if (loaderNode) loaderNode.remove();
-                addMessage("Error: " + error.message, 'bot');
-            }
-        }
-
-        sendBtn.addEventListener('click', handleSend);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSend();
-        });
     </script>
 </body>
 
